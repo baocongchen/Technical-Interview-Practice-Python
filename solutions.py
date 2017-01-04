@@ -75,16 +75,22 @@ def question2(a):
     return longest_pal
 # Ex: redivider, noon, civic, radar, level, rotor, kayak, reviver.
 # test cases
+print "Case 1"
 question2('')
 #There is no palindrome in the string
+print "Case 2"
 question2('h')
 #There is no palindrome in the string
+print "Case 3"
 question2('hawls')
 #There is no palindrome in the string
+print "Case 4"
 question2('noon')
 #The longest palindrome is:  noon
+print "Case 5"
 question2('non')
 #The longest palindrome is:  non
+print "Case 6"
 question2('n oonlev elrediv iderMr. Owl ate my metal worm')
 #The longest palindrome is:  Mr. Owl ate my metal worm
 
@@ -103,48 +109,56 @@ question2('n oonlev elrediv iderMr. Owl ate my metal worm')
 # question3(G)
 #==============================================================================
 
-def question3(G):
-  def get_edge_list(self):
-    edge_list = []
-    for edge_object in self.edges:
-      edge = (edge_object.value, edge_object.node_from.value, edge_object.node_to.value)
-      edge_list.append(edge)
-    return edge_list
+def question3(G):  
+  min_span_tree = G
+  # loop through each key (vertice) in graph G
+  for vertice in G:
+    # outer loop is used to scan through each element of G[vertice]
+    for i_index, i in enumerate(G[vertice]):
+      # inner loop is used to compare each element to the others
+      for j_index, j in enumerate(G[vertice]):
+        # find all paths of the same that exist, then delete the longer paths.
+        if i[0] == j[0]:
+          if i[1] < j[1]:
+            del min_span_tree[vertice][j_index]
+          elif i[1] > j[1]:
+            del min_span_tree[vertice][i_index]
+  print min_span_tree
+  return min_span_tree
+#Case 1
+print "Case 1"
+G = {'A': [('B', 2),('B', 4)], 'B': [('A', 2), ('C', 5), ('A', 4)], 'C': [('B', 5)]} 
+question3(G)
+#{'A': [('B', 2)], 'C': [('B', 5)], 'B': [('A', 2), ('C', 5)]}  
 
-  def get_adjacency_list(self):
-    max_index = self.find_max_index()
-    adjacency_list = [None] * (max_index + 1)
-    for edge_object in self.edges:
-      if adjacency_list[edge_object.node_from.value]:
-        adjacency_list[edge_object.node_from.value].append((edge_object.node_to.value, edge_object.value))
-      else:
-        adjacency_list[edge_object.node_from.value] = [(edge_object.node_to.value, edge_object.value)]
-    return adjacency_list
+#Case 2
+print "Case 2"
+G = {'A': [('B', 2)], 'B': [('A', 2), ('C', 5)], 'C': [('B', 5)]} 
+question3(G)
+#{'A': [('B', 2)], 'C': [('B', 5)], 'B': [('A', 2), ('C', 5)]} 
 
-  def get_adjacency_matrix(self):
-    max_index = self.find_max_index()
-    adjacency_matrix = [[0 for i in range(max_index + 1)] for j in range(max_index + 1)]
-    for edge_object in self.edges:
-      adjacency_matrix[edge_object.node_from.value][edge_object.node_to.value] = edge_object.value
-    return adjacency_matrix
+#Case 3
+print "Case 3"
+G = {} 
+question3(G)
+#{}  
 
-  def find_max_index(self):
-    max_index = -1
-    if len(self.nodes):
-      for node in self.nodes:
-        if node.value > max_index:
-          max_index = node.value
-    return max_index
-  return get_adjacency_list(G)
-
-# I don't know how to answer question 3, can you explain what I should do to 
-# answer the question.
 
 
 #==============================================================================
 # Question 4
 # Find the least common ancestor between two nodes on a binary search tree. The
-# least common ancestor is the farthest node from the root that is an ancestor of both nodes. For example, the root is a common ancestor of all nodes on the tree, but if both nodes are descendents of the root's left child, then that left child might be the lowest common ancestor. You can assume that both nodes are in the tree, and the tree itself adheres to all BST properties. The function definition should look like question4(T, r, n1, n2), where T is the tree represented as a matrix, where the index of the list is equal to the integer stored in that node and a 1 represents a child node, r is a non-negative integer representing the root, and n1 and n2 are non-negative integers representing the two nodes in no particular order. For example, one test case might be
+# least common ancestor is the farthest node from the root that is an ancestor 
+# of both nodes. For example, the root is a common ancestor of all nodes on the
+# tree, but if both nodes are descendents of the root's left child, then that 
+# left child might be the lowest common ancestor. You can assume that both 
+# nodes are in the tree, and the tree itself adheres to all BST properties. The
+# function definition should look like question4(T, r, n1, n2), where T is the 
+# tree represented as a matrix, where the index of the list is equal to the 
+# integer stored in that node and a 1 represents a child node, r is a 
+# non-negative integer representing the root, and n1 and n2 are non-negative 
+# integers representing the two nodes in no particular order. For example, one 
+# test case might be
 # 
 # question4([[0, 1, 0, 0, 0],
 #            [0, 0, 0, 0, 0],
@@ -156,12 +170,45 @@ def question3(G):
 #           4)
 # and the answer would be 3.
 #==============================================================================
-  
-def question4():
-  return 
-    
-# I don't know how to answer question 4, can you explain what I should do to 
-# answer the question.
+
+def question4(T, r, n1, n2):
+  def rindex(mylist, myvalue):
+    return len(mylist) - mylist[::-1].index(myvalue) - 1
+  lca = r
+  # if the target values are in different subtrees, then current_node is the LCA.
+  for i in range(len(T)):
+    if n1 < lca < n2:
+      break
+    # if both target nodes are in the left subtree, then check the left child
+    elif n1 < lca and n2 < lca:
+      lca = T[lca].index(1)
+    # if both target nodes are in the right subtree, then check the right child
+    elif n1 > lca and n2 > lca:
+      lca = T[lca].rindex(T[lca], 1)
+    # return None if there's no LCA existing between n1 and n2
+    else:
+      print "There's no LCA existing between node", n1, "and node", n2
+      lca = None
+      return lca
+  print "The LCA node is", lca
+  return lca
+
+
+#Case 1
+print "Case 1"
+question4([[0,1,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[1,0,0,0,1],[0,0,0,0,0]],3,1,4)
+#3
+
+#Case 2
+print "Case 2"
+question4([[0,0,0,0,0,0,0],[1,0,1,0,0,0,0],[0,0,0,0,0,0,0],\
+           [0,0,0,1,0,0,1],[0,0,0,0,0,0,0],[0,0,0,0,0,0,0]],4,2,5)
+#4
+
+#Case 3
+print "Case 3"
+question4([[0,1,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[1,0,0,0,1],[0,0,0,0,0]],3,0,2)
+#None
 
 
 #==============================================================================
@@ -174,12 +221,41 @@ def question4():
 # in the linked list. Return the value of the node at that position.
 #==============================================================================
 
-class Node(object):
-  def __init__(self, data):
-    self.data = data
-    self.next = None  
-def question5():
-  return
-  
-# I don't know how to answer question 5, can you explain what I should do to 
-# answer the question.
+def question5(ll, m):
+  class Node(object):
+    def __init__(self, data):
+      self.data = data
+      self.next = None  
+      
+  class LinkedList:
+ 
+    # Function to initialize head
+    def __init__(self):
+      self.head = None
+ 
+    # Function to insert a new node at the beginning
+    def insert(self, new_data):
+      # create a new node
+      new_node = Node(new_data)
+      # create ref point for the new node
+      new_node.next = self.head
+      # change head of the linked list to the new node
+      self.head = new_node
+    # Function to get Nth node from the end
+    def printNthFromLast(self, m):
+      main_ptr = self.head
+      ref_ptr = self.head 
+   
+      count = 0
+      if self.head is not None:
+        while count < m:
+          if ref_ptr is None:
+            print "%d is greater than the number of nodes in the list" %m
+            return
+
+          ref_ptr = ref_ptr.next
+          count += 1
+
+      while ref_ptr is not None:
+        main_ptr = main_ptr.next
+        ref_ptr = ref_ptr.next
